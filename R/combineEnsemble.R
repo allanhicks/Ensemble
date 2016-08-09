@@ -6,6 +6,7 @@
 #' @param totN    Total number of samples of combined models
 #' @param wts     Weights applied to each model when combining. This is normalized, so can be any number. A single number means equal weights (default)
 #' @param asList  Will keep the sample from each model as a list element.  By default it is FALSE, but will be changed to true if the variables are not the same for each model (which would occur if some are not estimated in a model)
+#' @export
 combineEnsemble.fn <- function(models, param="SPB", element="derived_quants", yrs=NULL, useCov=F, totN=1e6, wts=1, asList=FALSE) {
 
 	if(length(wts)==1) wts<-rep(wts,length(models))

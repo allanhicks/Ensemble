@@ -1,6 +1,7 @@
 #' To Read the admb .cor file
 #' @param corFile   The location and name of the .cor file
 #' @param preNames  The number of columns before the correlations are reported
+#' @export
 readCor.fn <- function(corFile, preNames=4) {
 	xx <- readLines(corFile)
 	xx <- xx[-1]  #remove the first line (determinant Hessian)

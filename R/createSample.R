@@ -3,6 +3,7 @@
 #' @param n Sample size
 #' @param means A vector of means
 #' @param Sigma Variance-Covariance matrix
+#' @export
 createSample.fn <- function(n, means, Sigma) {
 
 	require(MASS)

@@ -2,6 +2,7 @@
 #' Uses the SS version of the correlation matrix
 #' @param ssModel A SS model loaded using SS_output from r4ss
 #' @param vars    Names of the variables for the covariance matrix
+#' @export
 getCov.fn <- function(ssModel, vars) {
 	#cat("Getting Covariance matrix. This may take a while. There are",length(vars),"rows.\nRow:")
 	x <- ssModel$CoVar
