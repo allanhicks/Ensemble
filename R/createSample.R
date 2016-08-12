@@ -17,6 +17,7 @@ createSample.fn <- function(n, means, Sigma) {
 	if(!is.positive.definite(Sigma)) {
 			cat("Covariance matrix not positive definite, even after removing fixed parameters.\n")
 			cat("Check your ADMB model to make sure that the Hessian was positive definite\n")
+			cat("Or, use a smaller set of parameters to sample from (e.g., yrs=c(2015,2025)\n")
 			stop("Exiting because can not sample\n")
 	}
 	fullMeans <- means
