@@ -2,6 +2,7 @@
 
 export(combineEnsemble.fn)
 export(createSample.fn)
+export(getVals.fn)
 export(getCov.fn)
 export(readCor.fn)
 export(createFullCov.fn)
