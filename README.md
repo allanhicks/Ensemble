@@ -15,7 +15,7 @@ library(r4ss)
 model1 <- SS_output("Models/model1",verbose=F)
 model2 <- SS_output("Models/model2",verbose=F)
 model3 <- SS_output("Models/model3",verbose=F)
-model4 <- SS_output("Modelsmodel4",verbose=F)
+model4 <- SS_output("Models/model4",verbose=F)
 models <- list(model1, model2, model3, model4)
 ```
 
