@@ -2,7 +2,7 @@
 #' @param x     The matrix of parameters or derived parameters from SS_output
 #' @param param The name of the parameter
 #' @param cols  The column names for the mean and standard deviation, respectively
-getVals.fn <- function(x, param, cols=c("Value","StdDev")) {
+getVals.fn <- function(x, param, cols=c("Value","StdDev","Min","Max")) {
 	if(is.null(cols)) {cols <- 1:ncol(x)}
 	if(is.null(param)) {param<-rownames(x)}
 

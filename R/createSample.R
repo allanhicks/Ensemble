@@ -3,8 +3,11 @@
 #' @param n Sample size
 #' @param means A vector of means
 #' @param Sigma Variance-Covariance matrix
+#' @param lower Lower bounds for the parameters (to sample from a truncate multivariate normal)
+#' @param upper Upper bounds for the parameters (to sample from a truncate multivariate normal)
+#' @param truncated Logical. Whether to use the truncated multivariate normal function or not. The truncated multivariate normal function may be slower.
 #' @export
-createSample.fn <- function(n, means, Sigma) {
+createSample.fn <- function(n, means, Sigma, lower=rep(-Inf, length = length(mean)), upper=rep( Inf, length = length(mean)), truncated=TRUE) {
 
 	require(MASS)
 	require(corpcor)
@@ -22,8 +25,18 @@ createSample.fn <- function(n, means, Sigma) {
 	}
 	fullMeans <- means
 	means <- means[keep]
+	fullLower <- lower
+	lower <- lower[keep]
+	lower[is.na(lower)] <- -Inf
+	fullUpper <- upper
+	upper <- upper[keep]
+	upper[is.na(upper)] <- Inf
 
-	samp <- mvrnorm(n, means, Sigma)
+	if(truncated) {
+		samp <- rtmvnorm.rejection(n, means, Sigma, lower=lower, upper=upper)
+	} else {
+		samp <- mvrnorm(n, means, Sigma)
+	}
 
 	#now, piece it back together because fixed values were removed.
 	fullSamp <- matrix(NA,nrow=nrow(samp),ncol=ncol(fullSigma),dimnames=list(NULL,colnames(fullSigma)))
