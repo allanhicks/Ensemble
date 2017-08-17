@@ -9,6 +9,9 @@ getVals.fn <- function(x, param, cols=c("Value","StdDev","Min","Max")) {
 
 	if(length(param)>1) {
 		out <- x[param,cols]
+		if(length(cols)==1) {
+			names(out) <- param
+		}
 	}
 	if(length(param)==1) {
 		out <- x[grep(param,rownames(x),fixed=T),cols]
