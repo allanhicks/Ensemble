@@ -6,7 +6,15 @@
 #' @export
 getCov.fn <- function(ssModel, vars, sds=NULL) {
 	#cat("Getting Covariance matrix. This may take a while. There are",length(vars),"rows.\nRow:")
+
 	x <- ssModel$CoVar
+
+	if(length(grep("SSB",vars)) > 0) {
+		#change SPB to SSB to match newer r4ss versions and names of derived_quants
+		x$label.i <- gsub("SPB","SSB",x$label.i)
+		x$label.j <- gsub("SPB","SSB",x$label.j)		
+	}
+
 	x <- x[x$label.i %in% vars,]
 	x$label.j[x$label.j=="_"] <- x$label.i[x$label.j=="_"]
 	x <- x[x$label.j %in% vars,]
