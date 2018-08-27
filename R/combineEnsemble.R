@@ -3,6 +3,7 @@
 #' @param param   The name of the parameter to be combined (does not include year)
 #' @param element The list element to get param from (e.g., derived_quants, parameters)
 #' @param yrs     The yrs of the parameter to summarize.  If NULL, it will either include all years, or the param does not have a year.
+#' @param useCov  logical to determine if covariance are filled in the covariance matrix. If false, only standard errors are used and covariances are zero.
 #' @param totN    Total number of samples of combined models
 #' @param wts     Weights applied to each model when combining. This is normalized, so can be any number. A single number means equal weights (default)
 #' @param asList  Will keep the sample from each model as a list element.  By default it is FALSE, but will be changed to true if the variables are not the same for each model (which would occur if some are not estimated in a model)
@@ -17,7 +18,6 @@ combineEnsemble.fn <- function(models, param="SPB", element="derived_quants", yr
 		               derived_quants = c("Value","StdDev"),
 		               parameters = c("Value","Parm_StDev"),
 		               stop("'element' must be 'derived_quants' or 'parameters'.\n"))
-
 	#get the values desired
 	vals <- lapply(models,function(x,e,p,y,cn) {
 								if(is.null(y)) {

@@ -6,11 +6,13 @@
 #' @param lower Lower bounds for the parameters (to sample from a truncate multivariate normal)
 #' @param upper Upper bounds for the parameters (to sample from a truncate multivariate normal)
 #' @param truncated Logical. Whether to use the truncated multivariate normal function or not. The truncated multivariate normal function may be slower.
+#' @param fixPD fix the PD to the nearest positive definite, if it isn't
 #' @export
-createSample.fn <- function(n, means, Sigma, lower=rep(-Inf, length = length(mean)), upper=rep( Inf, length = length(mean)), truncated=TRUE) {
+createSample.fn <- function(n, means, Sigma, lower=rep(-Inf, length = length(mean)), upper=rep( Inf, length = length(mean)), truncated=TRUE, fixPD=T) {
 
 	require(MASS)
 	require(corpcor)
+	require(Matrix)
 	#check if Sigma is positive-definite (uses corpcor package)
 	#if not, remove all fixed parameters and check again
 
@@ -18,10 +20,15 @@ createSample.fn <- function(n, means, Sigma, lower=rep(-Inf, length = length(mea
 	keep <- diag(Sigma)!=0
 	Sigma <- Sigma[keep,keep]
 	if(!is.positive.definite(Sigma)) {
-			cat("Covariance matrix not positive definite, even after removing fixed parameters.\n")
-			cat("Check your ADMB model to make sure that the Hessian was positive definite\n")
-			cat("Or, use a smaller set of parameters to sample from (e.g., yrs=c(2015,2025)\n")
-			stop("Exiting because can not sample\n")
+		if(fixPD) {
+				cat("Fixed the covariance matrix to make it positive-definite\n")
+				out <- as.matrix(nearPD(xx, corr = FALSE, keepDiag = FALSE)$mat)
+			}else{
+				cat("Covariance matrix not positive definite, even after removing fixed parameters.\n")
+				cat("Check your ADMB model to make sure that the Hessian was positive definite\n")
+				cat("Or, use a smaller set of parameters to sample from (e.g., yrs=c(2015,2025)\n")
+				stop("Exiting because can not sample\n")				
+			}
 	}
 	fullMeans <- means
 	means <- means[keep]
