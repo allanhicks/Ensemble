@@ -21,6 +21,9 @@ createSample.fn <- function(n, means, Sigma, lower=rep(-Inf, length = length(mea
 	fullSigma <- Sigma
 	keep <- diag(Sigma)!=0
 	Sigma <- Sigma[keep,keep]
+	if(!is.matrix(Sigma)) {
+		Sigma <- as.matrix(Sigma)
+	}
 	if(!is.positive.definite(Sigma)) {
 		if(fixPD) {
 				cat("Fixed the covariance matrix to make it positive-definite\n")
