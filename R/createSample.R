@@ -14,7 +14,7 @@ createSample.fn <- function(n, means, Sigma, lower=rep(-Inf, length = length(mea
 
 	require(MASS)
 	require(corpcor)
-	require(Matrix)
+	#require(Matrix)
 	#check if Sigma is positive-definite (uses corpcor package)
 	#if not, remove all fixed parameters and check again
 
@@ -27,7 +27,8 @@ createSample.fn <- function(n, means, Sigma, lower=rep(-Inf, length = length(mea
 	if(!is.positive.definite(Sigma)) {
 		if(fixPD) {
 				cat("Fixed the covariance matrix to make it positive-definite\n")
-				Sigma <- as.matrix(nearPD(Sigma, corr = FALSE, keepDiag = FALSE)$mat)
+				#Sigma <- as.matrix(nearPD(Sigma, corr = FALSE, keepDiag = FALSE)$mat)
+				Sigma <- make.positive.definite(Sigma)
 			}else{
 				cat("Covariance matrix not positive definite, even after removing fixed parameters.\n")
 				cat("Check your ADMB model to make sure that the Hessian was positive definite\n")
