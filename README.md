@@ -34,6 +34,14 @@ sum(brat[,"Bratio_2017"]<0.3)/nrow(brat)
 spr2016 <- combineEnsemble.fn(models,param="SPRratio",element="derived_quants",yrs=2016,totN=4000,useCov=TRUE)
 quantile(1-spr2016,probs=c(0.025,0.5,0.975))
 
-foreCatch <- combineEnsemble.fn(models,param="ForeCatch",element="derived_quants",yrs=2016:2018,totN=4000,useCov=TRUE)
-quantile(foreCatch,probs=c(0.025,0.5,0.975))
+oflCatch <- combineEnsemble.fn(models,param="OFLCatch",element="derived_quants",yrs=2016:2018,totN=4000,useCov=TRUE)
+quantile(oflCatch,probs=c(0.025,0.5,0.975))
+
+#do this for multiple quantities at the same time
+multQuants <- combineEnsemble.fn(models,param=c("SSB","Bratio"),element="derived_quants",yrs=2016:2018,totN=4000,useCov=TRUE)
+apply(multQuants,2,quantile,probs=c(0.025,0.5,0.975))
+
+#create a list separated by models for viewing individual results
+indModels <- combineEnsemble.fn(models,param="SSB",element="derived_quants",yrs=2016:2018,totN=4000,useCov=TRUE,asList=T)
+lapply(indModels,function(x){apply(x,2,quantile,probs=c(0.025,0.5,0.975))})
 ```

@@ -3,7 +3,7 @@
 #' @param param The name of the parameter
 #' @param cols  The column names for the mean and standard deviation, respectively
 #' @export
-getVals.fn <- function(x, param, cols=c("Value","StdDev","Min","Max")) {
+getVals.fn <- function(x, param=NULL, cols=c("Value","StdDev","Min","Max")) {
 	if(is.null(cols)) {cols <- 1:ncol(x)}
 	if(is.null(param)) {param<-rownames(x)}
 

@@ -8,7 +8,7 @@
 #' @param wts     Weights applied to each model when combining. This is normalized, so can be any number. A single number means equal weights (default)
 #' @param asList  Will keep the sample from each model as a list element.  By default it is FALSE, but will be changed to true if the variables are not the same for each model (which would occur if some are not estimated in a model)
 #' @export
-combineEnsemble.fn <- function(models, param="SPB", element="derived_quants", yrs=NULL, useCov=F, totN=1e6, wts=1, asList=FALSE) {
+combineEnsemble.fn <- function(models, param="SSB", element="derived_quants", yrs=NULL, useCov=F, totN=1e6, wts=1, asList=FALSE) {
 
 	if(length(wts)==1) wts<-rep(wts,length(models))
 	wts <- wts/sum(wts)
@@ -18,6 +18,15 @@ combineEnsemble.fn <- function(models, param="SPB", element="derived_quants", yr
 		               derived_quants = c("Value","StdDev"),
 		               parameters = c("Value","Parm_StDev"),
 		               stop("'element' must be 'derived_quants' or 'parameters'.\n"))
+	#paste together year and param so that each param has a year
+	if(length(param)>1 & !is.null(yrs)) {
+		params <- NULL
+		for(i in 1:length(param)) {
+			params <- c(params,paste(param[i],yrs,sep="_"))
+		}
+		param <- params
+		yrs <- NULL
+	}
 	#get the values desired
 	vals <- lapply(models,function(x,e,p,y,cn) {
 								if(is.null(y)) {
@@ -27,11 +36,17 @@ combineEnsemble.fn <- function(models, param="SPB", element="derived_quants", yr
 								}
 	        }, e=element, p=param, y=yrs, cn=colNames)
 
+	#test that there are rows with that parameter name
+	test <- any(unlist(lapply(vals,function(x){all(is.na(x[,1]))})))
+	if(test) {
+		stop("For at least one model, none of the parameters and/or years are present\n")
+	}
+
 	lens <- unlist(lapply(vals,nrow))
 	if(any(lens != lens[1])) {
 		asList <- TRUE
 	}
-	#out <- combineDistn.fn(totN, vals) deprecated
+
 	if(asList) {
 		samps <- vector(length=length(models),mode="list")
 	} else {
