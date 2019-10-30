@@ -1,5 +1,5 @@
 # Ensemble package in R
-Functions for working with and combining ensemble models
+Functions for working with and combining ensemble models. Developed for Stock Synthesis, but hopefully can be generalized to work with any ADMB model or more.
 
 # Example R code
 
