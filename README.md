@@ -44,4 +44,13 @@ apply(multQuants,2,quantile,probs=c(0.025,0.5,0.975))
 #create a list separated by models for viewing individual results
 indModels <- combineEnsemble.fn(models,param="SSB",element="derived_quants",yrs=2016:2018,totN=4000,useCov=TRUE,asList=T)
 lapply(indModels,function(x){apply(x,2,quantile,probs=c(0.025,0.5,0.975))})
+
+xx <- combineEnsemble.fn(models,param="NatM_p_1_Mal_GP_1",element="parameters",yrs=NULL,totN=4000,useCov=TRUE)
+round(quantile(xx, probs=c(0.025, 0.5, 0.975)),4)
+
+#note, when there are fixed parameters, the code will not work unless paired with estimated paramaters.
+#you can also get creative with 'param' and 'yrs' arguments since they are combined
+xx <- combineEnsemble.fn(models,param="NatM_p_1",element="parameters",yrs=c("Fem_GP_1","Mal_GP_1"),totN=4000,useCov=TRUE)
+round(apply(xx,2,quantile,probs=c(0.025,0.5,0.975)),4)
+
 ```

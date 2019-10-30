@@ -41,6 +41,11 @@ combineEnsemble.fn <- function(models, param="SSB", element="derived_quants", yr
 	if(test) {
 		stop("For at least one model, none of the parameters and/or years are present\n")
 	}
+	#test that there are rows with estimated SD
+	test <- any(unlist(lapply(vals,function(x){all(is.na(x[,2]))})))
+	if(test) {
+		stop("For at least one model, none of the parameters were estimated. Try including a parameter estimated in all models.\n")
+	}
 
 	lens <- unlist(lapply(vals,nrow))
 	if(any(lens != lens[1])) {
