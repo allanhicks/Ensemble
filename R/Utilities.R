@@ -44,11 +44,13 @@ cor2cov.fn <- function(corMat,sds) {
 #' @param sigma Covariance matrix (k x k) of the normal distribution
 #' @param lower Lower bounds vector (k x 1) with lower <= mean <= upper
 #' @param upper Upper bounds vector (k x 1) with lower <= x <= upper
+#' @param estimatedAlpha logical to indicate if acceptance rate is estimated or determined analytically
 rtmvnorm.rejection <- function(n, 
   						mean = rep(0, nrow(sigma)), 
   						sigma = diag(length(mean)), 
   						lower = rep(-Inf, length = length(mean)), 
-  						upper = rep( Inf, length = length(mean))) {
+  						upper = rep( Inf, length = length(mean)),
+  						estimatedAlpha=TRUE) {
 	
 	# Adapted from the R package rtmvnorm version 1.4-9 
 	# Written by Stefan Wilhelm (wilhelm@financial.com)
@@ -68,22 +70,27 @@ rtmvnorm.rejection <- function(n,
   
   	# Number of accepted samples kept
   	numAcceptedSamplesTotal <- 0
-  
-  	# Acceptance rate (alpha) from the multivariate normal distribution
-    alpha <- pmvnorm(lower=lower, upper=upper, mean=mean, sigma=sigma)
-    if (alpha <= 0.01) warning(sprintf("Acceptance rate is very low (%s) and rejection sampling becomes inefficient. Consider using Gibbs sampling.", alpha))
-    estimatedAlpha <- TRUE
 
-    # Defer calculation of alpha. Assume for now that all samples will be accepted.
-	# alpha <- 1
-	# estimatedAlpha <- FALSE
+  	# Acceptance rate (alpha) from the multivariate normal distribution
+  	if(estimatedAlpha) {
+	    alpha <- pmvnorm(lower=lower, upper=upper, mean=mean, sigma=sigma)
+	    if (alpha <= 0.01) warning(sprintf("Acceptance rate is very low (%s) and rejection sampling becomes inefficient. Consider using Gibbs sampling.", alpha))
+	    # estimatedAlpha <- TRUE
+  	} else {
+	    # Defer calculation of alpha. Assume for now that all samples will be accepted.
+		alpha <- 1
+		estimatedAlpha <- FALSE
+  	}
+
   
     # Repeat from Multivariate NV and see how many samples remain after truncation
     while(numSamples > 0)
     {
+
 		# Generate N / alpha samples from a multivariate normal distribution: If alpha is too low, rejection sampling becomes inefficient and N / alpha too large. Then create only N
 		nproposals <- ifelse (numSamples/alpha > 1000000, numSamples, ceiling(max(numSamples/alpha,10)))
 		X <- rmvnorm(nproposals, mean=mean, sigma=sigma)
+
 
 		# Determine the proportion of samples after truncation
 		# ind=apply(X, 1, function(x) all(x >= lower & x<=upper))
@@ -95,6 +102,7 @@ rtmvnorm.rejection <- function(n,
 
 		# Number of samples accepted in this run
 		numAcceptedSamples <- sum(ind)
+
 		    
 		# If nothing has been accepted, then restart loop
 		if (length(numAcceptedSamples) == 0 || numAcceptedSamples == 0) next   #halt the processing of the current iteration and advance the looping index
@@ -114,7 +122,7 @@ rtmvnorm.rejection <- function(n,
 		# Number of remaining samples
 		numSamples <- numSamples - numAcceptedSamples 
   	}
-  	Y
+  	return(Y)
 }
 
 #' A simple way to sample from multiple models with no correlation between parameters
