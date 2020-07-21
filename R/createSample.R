@@ -7,10 +7,11 @@
 #' @param upper Upper bounds for the parameters (to sample from a truncate multivariate normal)
 #' @param truncated Logical. Whether to use the truncated multivariate normal function or not. The truncated multivariate normal function may be slower.
 #' @param fixPD fix the PD to the nearest positive definite, if it isn't
+#' @param estAlpha estimate the acceptance rate if using the truncated normal
 #' 
 #' @authors Allan Hicks, Gwladys Lambert
 #' @export
-createSample.fn <- function(n, means, Sigma, lower=rep(-Inf, length = length(mean)), upper=rep( Inf, length = length(mean)), truncated=TRUE, fixPD=T) {
+createSample.fn <- function(n, means, Sigma, lower=rep(-Inf, length = length(mean)), upper=rep( Inf, length = length(mean)), truncated=TRUE, fixPD=T, estAlpha=TRUE) {
 
 	require(MASS)
 	require(corpcor)
@@ -46,7 +47,7 @@ createSample.fn <- function(n, means, Sigma, lower=rep(-Inf, length = length(mea
 	upper[is.na(upper)] <- Inf
 
 	if(truncated) {
-		samp <- rtmvnorm.rejection(n, means, Sigma, lower=lower, upper=upper)
+		samp <- rtmvnorm.rejection(n, means, Sigma, lower=lower, upper=upper,estimatedAlpha=estAlpha)
 	} else {
 		samp <- mvrnorm(n, means, Sigma)
 	}
