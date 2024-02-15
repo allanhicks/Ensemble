@@ -38,6 +38,6 @@ xxx <- createSample.fn(n=10000, means=mu, Sigma=Sigma, logSpace=FALSE, logBiasCo
 apply(xxx,2,summary)
 round(var(xxx),1)
 
-xxxlog <- createSample.fn(n=100000, means=mu, Sigma=Sigma, logSpace=TRUE, logBiasCorr=FALSE, lower=rep(-Inf, length = length(mean)), upper=rep( Inf, length = length(mean)), truncated=TRUE, fixPD=T, estAlpha=TRUE)
+xxxlog <- createSample.fn(n=100000, means=mu, Sigma=Sigma, logSpace=TRUE, logBiasCorr=TRUE, lower=rep(-Inf, length = length(mean)), upper=rep( Inf, length = length(mean)), truncated=FALSE, fixPD=T, estAlpha=FALSE)
 apply(xxxlog,2,summary)
 round(var(xxxlog))
