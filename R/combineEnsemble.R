@@ -8,7 +8,7 @@
 #' @param wts     Weights applied to each model when combining. This is normalized, so can be any number. A single number means equal weights (default)
 #' @param asList  Will keep the sample from each model as a list element.  By default it is FALSE, but will be changed to true if the variables are not the same for each model (which would occur if some are not estimated in a model)
 #' @export
-combineEnsemble.fn <- function(models, param="SSB", element="derived_quants", yrs=NULL, useCov=F, totN=1e6, wts=1, asList=FALSE) {
+combineEnsemble.fn <- function(models, param="SSB", element="derived_quants", yrs=NULL, useCov=F, totN=1e6, wts=1, asList=FALSE, logSpace=FALSE, logBiasCorr = TRUE) {
 
 	if(length(wts)==1) wts<-rep(wts,length(models))
 	wts <- wts/sum(wts)
@@ -67,7 +67,7 @@ combineEnsemble.fn <- function(models, param="SSB", element="derived_quants", yr
 			sig <- getCov.fn(models[[i]], rownames(vals[[i]]))
 		}
 		#test for positive definite and create multivariate normal sample
-		tmp <- createSample.fn(eachN[i], vals[[i]][,colNames[1]],sig)
+		tmp <- createSample.fn(eachN[i], vals[[i]][,colNames[1]],sig, , logSpace=logSpace, logBiasCorr=logBiasCorr)
 		rownames(tmp) <- paste("Model",i,1:eachN[i],sep="_")
 		if(asList) {
 			samps[[i]] <- tmp
