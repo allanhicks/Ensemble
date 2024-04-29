@@ -1,7 +1,7 @@
 
 
 
-
+if(F) {
 
 
 
@@ -41,3 +41,6 @@ round(var(xxx),1)
 xxxlog <- createSample.fn(n=100000, means=mu, Sigma=Sigma, logSpace=TRUE, logBiasCorr=TRUE, lower=rep(-Inf, length = length(mean)), upper=rep( Inf, length = length(mean)), truncated=FALSE, fixPD=T, estAlpha=FALSE)
 apply(xxxlog,2,summary)
 round(var(xxxlog))
+
+
+}
